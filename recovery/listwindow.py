@@ -5,25 +5,23 @@ from tkinter import messagebox
 from easygui import filesavebox, fileopenbox, diropenbox
 
 import os
-from diskutils.physicaldata import PhysicalData
 
+from wizard.window import Wizard
+from diskutils.physicaldata import PhysicalData
 from diskutils.recoveredfiles import RecoveredFiles
 from drivepopup import DriveSelectionWindow
 from recovery.config import BACKGROUND
 
 class ListWindow(tk.Tk):
-  def __init__(self):
+  def __init__(self) -> None:
     super().__init__()
 
     self.title("File Restore")
     self.configure(background=BACKGROUND)
-    try:
-      # self.recover = RecoveredFiles(r"C:\Users\Nick Alvarez\OneDrive - nevada.unr.edu\2022 Fall\CS704 - Digital Forensics\Project\disk report.csv")
-      self.recover = RecoveredFiles("/Users/nicalvarez/Library/CloudStorage/OneDrive-nevada.unr.edu/2022 Fall/CS704 - Digital Forensics/Project/disk report.csv")
-    except TypeError:
-      exit(1)
+    self.recover = None
     self.drive = None
     self.isReady = False
+    self.columns = ["File name", "File size", "Create date", "Modify date", "Access date", "Path name", "Starting sector"]
 
     self.buttons_frame = ttk.Frame(self)
     self.list_frame = ttk.Frame(self)
@@ -35,19 +33,33 @@ class ListWindow(tk.Tk):
     self.recover_all_button = ttk.Button(self.buttons_frame, text="Recover All")
     self.recover_all_button.pack(padx=4, side=tk.LEFT, anchor=tk.W)
 
-    self.file_tree = ttk.Treeview(self.list_frame, columns=list(self.recover.files.columns), selectmode='browse', show='headings', displaycolumns=list(self.recover.files.columns), height=25)
+    self.file_tree = ttk.Treeview(self.list_frame, columns=self.columns, selectmode='browse', show='headings', displaycolumns=self.columns, height=25)
     self.file_tree.pack(expand=True, fill=tk.BOTH)
-    self.populate_treeview()
+    try:
+      self.populate_treeview()
+    except AttributeError:
+      pass
     self._make_headings()
 
-    self.buttons_frame.pack(padx=4, pady=4)
+    self.buttons_frame.pack(anchor=tk.W, padx=4, pady=4)
     self.list_frame.pack(padx=4, pady=4, expand=True, fill=tk.BOTH)
 
     self.wm_protocol('WM_DELETE_WINDOW', self.destroy)
+    self.after_idle(self._run_wizard)
     self.mainloop()
   
-  def _buttonsCheck(self):
-    if self.isReady:
+  def _run_wizard(self):
+    self.recover = Wizard(self).run()
+    print(self.recover)
+    self.update()
+    if self.recover == None:
+      self.destroy()
+      exit(0)
+    else:
+      self.populate_treeview()
+
+  def _buttons_check(self, e=None, ready=True):
+    if ready:
       for widget in [self.recover_button, self.recover_all_button]:
         widget.configure(state=tk.NORMAL)
     else:
@@ -84,7 +96,7 @@ class ListWindow(tk.Tk):
     self._buttonsCheck()
 
   def _make_headings(self):
-    cols = list(self.recover.files.columns)
+    cols = self.columns
     for col in cols:
       self.file_tree.heading(col, text=col, anchor='w')
       self.file_tree.column(col, minwidth=10, stretch=True, anchor='w')
