@@ -11,6 +11,14 @@ class RecoveredFiles():
     try: self.size = self.bytes/(1024*3)
     except (TypeError, ZeroDivisionError): self.size = 0.0
     self.sector_size = int(self.bytes/self.sectors) # Naive?
+    self.drive = None
+    self.physical_drive = None
+    self.friendly_drive = None
+
+  def set_drive(self, drive_df: pd.DataFrame) -> None:
+    self.drive = drive_df
+    self.physical_drive = drive_df["DeviceID"]
+    self.friendly_drive = drive_df["Caption"]
 
   def read_file(self, path: str) -> pd.DataFrame:
     try:
