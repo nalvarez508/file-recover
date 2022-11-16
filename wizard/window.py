@@ -12,6 +12,7 @@ from wizard.driveselect import DriveSelect
 from recovery.config import BACKGROUND, PADX, SYSTEM_FONT, LABEL_SIZE
 
 class Wizard(tk.Toplevel):
+  """Toplevel window to contain all Wizard frames."""
   def __init__(self, parent) -> None:
     tk.Toplevel.__init__(self, parent)
     self.title("File Recovery Wizard")
@@ -54,6 +55,14 @@ class Wizard(tk.Toplevel):
     #self.mainloop()
 
   def run(self) -> RecoveredFiles:
+    """
+    Closes this window once the wizard is complete.
+
+    Returns
+    -------
+    RecoveredFiles
+        Class containing report information.
+    """
     self.wait_window()
     try:
       if not self.file_select_page.file_report.drive.empty:
@@ -63,10 +72,26 @@ class Wizard(tk.Toplevel):
       return None
   
   def next_status(self, status: bool=True) -> None:
+    """
+    Handles enabling/disabling Next button.
+
+    Parameters
+    ----------
+    status : bool, optional
+        Enabled status, by default True
+    """
     self.next_btn.configure(state=(tk.NORMAL if status else tk.DISABLED))
     self.update_idletasks()
   
   def traverse(self, amt: int) -> None:
+    """
+    Moves forward or backwards in the wizard.
+
+    Parameters
+    ----------
+    amt : int
+        Pages to move.
+    """
     try:
       is_good_to_traverse = self.pages[self.current_page]._next_()
     except AttributeError:
@@ -91,6 +116,14 @@ class Wizard(tk.Toplevel):
         self.update()
 
   def _check_admin(self) -> bool:
+    """
+    Checks if the application is being run as an adminstrator.
+
+    Returns
+    -------
+    bool
+        True if being run as administrator.
+    """
     import os
     import ctypes
 

@@ -4,6 +4,7 @@ from tkinter import ttk
 from recovery.config import SYSTEM_FONT, BACKGROUND, WELCOME_MSG, LABEL_SIZE, WARNING_MSG
 
 class Welcome(ttk.Frame):
+  """Welcome message."""
   def __init__(self, parent) -> None:
     ttk.Frame.__init__(self, parent)
     self.frame_title = "File Recovery Wizard"

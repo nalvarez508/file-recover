@@ -8,6 +8,7 @@ from diskutils.recoveredfiles import RecoveredFiles
 from recovery.config import FILE_SELECT_MSG, SYSTEM_FONT, BACKGROUND, LABEL_SIZE
 
 class FileSelect(ttk.Frame):
+  """Report selection frame with file-open button."""
   def __init__(self, parent) -> None:
     ttk.Frame.__init__(self, parent)
     self.parent = parent
@@ -23,6 +24,7 @@ class FileSelect(ttk.Frame):
     self.select_file_frame.pack(padx=4, pady=12)
 
   def _prompt_for_file(self) -> None:
+    """Opens a file dialog."""
     path = fileopenbox(title="Select Report File", default=os.path.expanduser("~"), filetypes=["*.csv"])
     if path != None:
       if path.endswith(".csv"):

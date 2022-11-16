@@ -10,6 +10,7 @@ from io import StringIO
 from recovery.config import DRIVE_SELECT_MSG, PADX, SYSTEM_FONT, BACKGROUND, LABEL_SIZE
 
 class DriveSelect(ttk.Frame):
+  """Drive selection frame from a list."""
   def __init__(self, parent) -> None:
     ttk.Frame.__init__(self, parent)
     self.frame_title = "Select Physical Drive"
@@ -27,6 +28,14 @@ class DriveSelect(ttk.Frame):
       self.drive_list.insert(tk.END, disk)
   
   def get_selected_disk(self) -> bool:
+    """
+    Sets the user-selected physical disk.
+
+    Returns
+    -------
+    bool
+        Success or failure.
+    """
     def set_in_parent() -> None:
       self.parent.file_select_page.file_report.set_drive(_physical_disk)
       self.is_next_enabled = True
@@ -35,6 +44,7 @@ class DriveSelect(ttk.Frame):
     _sel = self.drive_list.curselection()
     _physical_disk = self.drives.iloc[_sel]
 
+    # Size mismatch
     if self.parent.file_select_page.file_report.bytes != _physical_disk["Size"]:
       ans = messagebox.askyesno(self.frame_title, f"Selected drive called {_physical_disk['Caption']} ({int(_physical_disk['Size']/1024/1024/1024)} GB) does not match the size of the report drive called {self.parent.file_select_page.file_report.model} ({int(self.parent.file_select_page.file_report.bytes/1024/1024/1024)} GB). Do you want to continue?")
       if ans == True:
@@ -54,6 +64,14 @@ class DriveSelect(ttk.Frame):
     self.is_next_enabled = True
 
   def _find_drives(self) -> pd.DataFrame:
+    """
+    Finds all physical drives attached to the system.
+
+    Returns
+    -------
+    pd.DataFrame
+        Found drives.
+    """
     # Windows
     if os.name == 'nt':
       _wmic = subprocess.run('wmic diskdrive list brief /format: csv', shell=True, capture_output=True)
