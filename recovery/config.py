@@ -6,7 +6,7 @@ DRIVE_SELECT_MSG = "Select the drive where the files will be recovered from."
 WARNING_MSG = "WARNING: Using the affected drive, such as writing a file, may render your data unrecoverable."
 
 PADX = 16
-LABEL_SIZE = 16
+LABEL_SIZE = 12
 
 if os.name == 'nt':
   BACKGROUND = 'SystemButtonFace'
