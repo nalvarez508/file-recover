@@ -52,6 +52,7 @@ class Wizard(tk.Toplevel):
     #   exit()
 
     self.wm_protocol('WM_DELETE_WINDOW', self.destroy)
+    self.after_idle(self.admin_error_check)
     #self.mainloop()
 
   def run(self) -> RecoveredFiles:
@@ -114,6 +115,14 @@ class Wizard(tk.Toplevel):
           self.label_text.set(self.pages[self.current_page].label_text)
       
         self.update()
+  
+  def admin_error_check(self) -> None:
+    if self._check_admin():
+      pass
+    else:
+      messagebox.showerror("File Recovery Wizard", "This application must be running as an administrator to recover files. Please re-launch the application with administrative rights.")
+      self.destroy()
+      exit(1)
 
   def _check_admin(self) -> bool:
     """
