@@ -21,7 +21,7 @@ class DriveSelect(ttk.Frame):
     self.drives = self._find_drives()
     self.values = [f"{x[1][1]} ({'%.3f'%(x[1][5]/1024/1024/1024)} GB)" for x in list(self.drives.iterrows())]
 
-    self.drive_list = tk.Listbox(self, font=("Helvetica", 12, tk.NORMAL))
+    self.drive_list = tk.Listbox(self, font=("Helvetica", 10, tk.NORMAL))
     self.drive_list.bind("<<ListboxSelect>>", self._list_callback)
     self.drive_list.pack(padx=PADX, expand=True, fill=tk.BOTH)
     for disk in self.values:
@@ -46,7 +46,7 @@ class DriveSelect(ttk.Frame):
 
     # Size mismatch
     if self.parent.file_select_page.file_report.bytes != _physical_disk["Size"]:
-      ans = messagebox.askyesno(self.frame_title, f"Selected drive called {_physical_disk['Caption']} ({int(_physical_disk['Size']/1024/1024/1024)} GB) does not match the size of the report drive called {self.parent.file_select_page.file_report.model} ({int(self.parent.file_select_page.file_report.bytes/1024/1024/1024)} GB). Do you want to continue?")
+      ans = messagebox.askyesno(self.frame_title, f"Selected drive called {_physical_disk['Caption']} ({int(_physical_disk['Size']/1024/1024)} MB) does not match the size of the report drive called {self.parent.file_select_page.file_report.model} ({int(self.parent.file_select_page.file_report.bytes/1024/1024)} MB). Do you want to continue?")
       if ans == True:
         set_in_parent()
         return True
