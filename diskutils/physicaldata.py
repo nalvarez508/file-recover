@@ -26,7 +26,7 @@ class PhysicalData():
   def __del__(self):
     self.disk.close()
 
-  def search(self, start: int, length: int) -> bytes:
+  def search(self, start: int, length: int, sector_calculated: bool=False) -> bytes:
     """
     Finds file data on the drive.
 
@@ -42,7 +42,9 @@ class PhysicalData():
     bytes
         File data.
     """
-    self.disk.seek(start*self.sector_size)
+    if sector_calculated: ss = 1
+    else: ss = self.sector_size
+    self.disk.seek(start*ss)
     _data = self.disk.read(length)
     return _data
   
