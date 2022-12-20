@@ -78,6 +78,7 @@ class DriveSelect(ttk.Frame):
       _wmic_decode = _wmic.stdout.decode('ascii')
       drive_info = pd.read_csv(StringIO(_wmic_decode))
       return drive_info
+    # MacOS
     elif sys.platform == 'darwin':
       _diskutil = subprocess.run("diskutil list | grep /dev | grep -Eo '^[^ ]+'", shell=True, capture_output=True)
       _diskutil_friendly = subprocess.run("diskutil list | grep /dev", shell=True, capture_output=True)

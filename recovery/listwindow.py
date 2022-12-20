@@ -1,4 +1,3 @@
-from pprint import isreadable
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox

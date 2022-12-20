@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from click import command
-from easygui import fileopenbox
 
-import pandas as pd
 from diskutils.recoveredfiles import RecoveredFiles
 
 from wizard.welcome import Welcome
